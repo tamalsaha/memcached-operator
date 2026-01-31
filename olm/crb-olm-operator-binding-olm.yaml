@@ -1,0 +1,15 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  creationTimestamp: "2026-01-31T08:01:14Z"
+  name: olm-operator-binding-olm
+  resourceVersion: "910"
+  uid: 5bac5c96-75f4-483f-96ab-5da3e985ef77
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:controller:operator-lifecycle-manager
+subjects:
+- kind: ServiceAccount
+  name: olm-operator-serviceaccount
+  namespace: olm

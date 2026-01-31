@@ -1,0 +1,111 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+  creationTimestamp: "2026-01-31T08:01:16Z"
+  generation: 1
+  labels:
+    app: olm-operator
+  name: olm-operator
+  namespace: olm
+  resourceVersion: "1054"
+  uid: aad48fc2-8c1d-47d9-8adc-a0d873321f16
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: olm-operator
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: olm-operator
+    spec:
+      containers:
+      - args:
+        - --namespace
+        - $(OPERATOR_NAMESPACE)
+        - --writeStatusName
+        - ""
+        command:
+        - /bin/olm
+        env:
+        - name: OPERATOR_NAMESPACE
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+        - name: OPERATOR_NAME
+          value: olm-operator
+        image: quay.io/operator-framework/olm@sha256:40d0363f4aa684319cd721c2fcf3321785380fdc74de8ef821317cd25a10782a
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /healthz
+            port: 8080
+            scheme: HTTP
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        name: olm-operator
+        ports:
+        - containerPort: 8080
+          name: metrics
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /healthz
+            port: 8080
+            scheme: HTTP
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources:
+          requests:
+            cpu: 10m
+            memory: 160Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: FallbackToLogsOnError
+      dnsPolicy: ClusterFirst
+      nodeSelector:
+        kubernetes.io/os: linux
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      serviceAccount: olm-operator-serviceaccount
+      serviceAccountName: olm-operator-serviceaccount
+      terminationGracePeriodSeconds: 30
+status:
+  availableReplicas: 1
+  conditions:
+  - lastTransitionTime: "2026-01-31T08:01:50Z"
+    lastUpdateTime: "2026-01-31T08:01:50Z"
+    message: Deployment has minimum availability.
+    reason: MinimumReplicasAvailable
+    status: "True"
+    type: Available
+  - lastTransitionTime: "2026-01-31T08:01:16Z"
+    lastUpdateTime: "2026-01-31T08:01:50Z"
+    message: ReplicaSet "olm-operator-775bc74c4" has successfully progressed.
+    reason: NewReplicaSetAvailable
+    status: "True"
+    type: Progressing
+  observedGeneration: 1
+  readyReplicas: 1
+  replicas: 1
+  terminatingReplicas: 0
+  updatedReplicas: 1

@@ -1,0 +1,15 @@
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  creationTimestamp: "2026-01-31T08:01:20Z"
+  generation: 1
+  name: global-operators
+  namespace: operators
+  resourceVersion: "1003"
+  uid: 1c200d4a-8264-4c80-8eb6-16744650748a
+spec:
+  upgradeStrategy: Default
+status:
+  lastUpdated: "2026-01-31T08:01:50Z"
+  namespaces:
+  - ""
